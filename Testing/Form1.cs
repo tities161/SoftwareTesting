@@ -20,19 +20,20 @@ namespace Testing
             textBox2.ScrollBars = ScrollBars.Vertical;
             textBox2.ReadOnly = true;
         }
-      
 
+        public int total = 0;
+        public string s = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\Database\";
         private void Form1_Load(object sender, EventArgs e)
         {
-            int total = 0;
-            string path = DateTime.Now.ToString("MM/yyyy");
-            if (File.Exists(path))
+            
+            string path = DateTime.Now.ToString("MM-yyyy");
+            if (File.Exists(s+path))
             {
-                textBox2.Text = File.ReadAllText(path);
+                textBox2.Text = File.ReadAllText(s+path);
             }
-            if (File.Exists("total" + path))
+            if (File.Exists(s+"total" + path))
             {
-                textBox1.Text = File.ReadAllText("total" + path);
+                textBox1.Text = File.ReadAllText(s+"total" + path);
                 textBox1.ReadOnly = true;
             }
             if (!string.IsNullOrEmpty(textBox2.Text))
@@ -50,16 +51,37 @@ namespace Testing
             }
             label4.Text = "Total Used:";
             label4.Text += total.ToString();
-
+            if (!String.IsNullOrEmpty(textBox1.Text))
+            {
+                int avai = (Int32.Parse(textBox1.Text) - total);
+                if (avai >= 0)
+                {
+                    label6.Text += avai.ToString();
+                }
+                else
+                {
+                    label6.Text += "Over " + Math.Abs(avai);
+                }
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (!String.IsNullOrEmpty(textBox1.Text))
+            if (!String.IsNullOrEmpty(textBox1.Text)&&(textBox1.ReadOnly==false))
             {
                 textBox1.ReadOnly = true;
-                string path ="total"+ DateTime.Now.ToString("MM/yyyy");
+                string path =s+"total" + DateTime.Now.ToString("MM-yyyy");
+                 
                 File.WriteAllText(path, textBox1.Text);
+                int avai = (Int32.Parse(textBox1.Text) - total);
+                if (avai >= 0)
+                {
+                    label6.Text += avai.ToString();
+                }
+                else
+                {
+                    label6.Text += "Over " + Math.Abs(avai);
+                }
             }
         }
 
@@ -93,20 +115,33 @@ namespace Testing
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int total = Int32.Parse(label4.Text.ToString().Split(':')[1]);
             if (!String.IsNullOrEmpty(textBox3.Text) && !String.IsNullOrEmpty(textBox4.Text))
             {
-                string s = DateTime.Now.ToString("MM/dd/yyyy") + "*" + textBox3.Text + "*" + textBox4.Text + "\u000D\u000A";
-                textBox2.AppendText(s);
-                string path = DateTime.Now.ToString("MM/yyyy");
-                File.WriteAllText(path, "");
-                File.WriteAllText(path, textBox2.Text);
+                string i = DateTime.Now.ToString("MM/dd/yyyy") + "*" + textBox3.Text + "*" + textBox4.Text + "\u000D\u000A";
+                textBox2.AppendText(i);
+                string path = DateTime.Now.ToString("MM-yyyy");
+                File.WriteAllText(s+path, "");
+                File.WriteAllText(s+path, textBox2.Text);
                 total += Int32.Parse(textBox4.Text.ToString());
                 label4.Text = "Total Used:";
                 label4.Text += total.ToString();
+                if (!String.IsNullOrEmpty(textBox1.Text))
+                {
+                    int avai = (Int32.Parse(textBox1.Text) - total);
+                    if (avai >= 0)
+                    {
+                        label6.Text = "";
+                        label6.Text += avai.ToString();
+                    }
+                    else
+                    {
+                        label6.Text = "";
+                        label6.Text += "Over " + Math.Abs(avai);
+                    }
+                }
+                textBox3.Text = "";
+                textBox4.Text = "";
             }
-            textBox3.Text = "";
-            textBox4.Text = "";
         }
     }
 }
