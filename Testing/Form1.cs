@@ -60,7 +60,8 @@ namespace Testing
                 }
                 else
                 {
-                    label6.Text += "Over " + Math.Abs(avai);
+                    label5.Text = "Over " + Math.Abs(avai);
+                    label6.Text = "";
                 }
             }
         }
@@ -80,7 +81,8 @@ namespace Testing
                 }
                 else
                 {
-                    label6.Text += "Over " + Math.Abs(avai);
+                    label5.Text = "Over " + Math.Abs(avai);
+                    label6.Text = "";
                 }
             }
         }
@@ -135,8 +137,8 @@ namespace Testing
                     }
                     else
                     {
+                        label5.Text = "Over " + Math.Abs(avai);
                         label6.Text = "";
-                        label6.Text += "Over " + Math.Abs(avai);
                     }
                 }
                 textBox3.Text = "";
