@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="testingApp">
+	
+	<property name="basedir.dir" value="${string::replace(project::get-base-directory(), '\','/')}" dynamic="true"/>
+
+	<target name="clean" description="remove all generated files">
+		<delete dir="${basedir.dir}\testing\bin" verbose="true" failonerror="false"/>
+		<delete dir="${basedir.dir}\testing\obj" verbose="true" failonerror="false"/>
+    </target>
+
+  	<target name="build" description="Compiles using the AutomatedDebug Configuration">
+  		<call target="clean" />
+  		<exec program="msbuild.exe" 
+      			basedir="C:\Windows\Microsoft.NET\Framework\v4.0.30319\" 
+      			commandline="Testing.sln"/>
+  	</target>
+</project>
