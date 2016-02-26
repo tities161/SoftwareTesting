@@ -25,15 +25,20 @@ namespace Testing
         public string s = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\Database\";
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
+            AppLoad();
+        }
+
+        public void AppLoad()
+        {
             string path = DateTime.Now.ToString("MM-yyyy");
-            if (File.Exists(s+path))
+            if (File.Exists(s + path))
             {
-                textBox2.Text = File.ReadAllText(s+path);
+                textBox2.Text = File.ReadAllText(s + path);
             }
-            if (File.Exists(s+"total" + path))
+            if (File.Exists(s + "total" + path))
             {
-                textBox1.Text = File.ReadAllText(s+"total" + path);
+                textBox1.Text = File.ReadAllText(s + "total" + path);
                 textBox1.ReadOnly = true;
             }
             if (!string.IsNullOrEmpty(textBox2.Text))
@@ -64,9 +69,10 @@ namespace Testing
                     label6.Text = "";
                 }
             }
+
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e) //input button
         {
             if (!String.IsNullOrEmpty(textBox1.Text)&&(textBox1.ReadOnly==false))
             {
@@ -87,7 +93,7 @@ namespace Testing
             }
         }
 
-        private void textBox1_KeyPress_1(object sender, KeyPressEventArgs e)
+        private void textBox1_KeyPress_1(object sender, KeyPressEventArgs e) // total amount textbox
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
                 (e.KeyChar != '.'))
@@ -101,7 +107,7 @@ namespace Testing
             }
         }
 
-        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
+        private void textBox4_KeyPress(object sender, KeyPressEventArgs e) //cost textbox
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
                 (e.KeyChar != '.'))
@@ -115,7 +121,7 @@ namespace Testing
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e) //OK button
         {
             if (!String.IsNullOrEmpty(textBox3.Text) && !String.IsNullOrEmpty(textBox4.Text))
             {
