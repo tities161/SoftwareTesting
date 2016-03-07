@@ -74,6 +74,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(312, 20);
             this.textBox3.TabIndex = 4;
+            this.textBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
             // 
             // textBox4
             // 
@@ -173,17 +174,40 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
+
+   
         private System.Windows.Forms.Button button1;
+
+
         private System.Windows.Forms.TextBox textBox2;
+
+     
         private System.Windows.Forms.TextBox textBox3;
+
+     
         private System.Windows.Forms.TextBox textBox4;
+
+      
         private System.Windows.Forms.Button button2;
+
         private System.Windows.Forms.Label label2;
+
+
         private System.Windows.Forms.Label label3;
+
+
         private System.Windows.Forms.Label label4;
+
+     
         private System.Windows.Forms.TextBox textBox1;
+
+     
         private System.Windows.Forms.Label label5;
+
+      
         private System.Windows.Forms.Label label6;
+
+       
     }
 }
 

@@ -8,10 +8,15 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+
 namespace Testing
 {
     public partial class Form1 : Form
     {
+
+        Controller c = new Controller();
+        public string s = "";
+        public int total=0;
         public Form1()
         {
             InitializeComponent();
@@ -21,134 +26,96 @@ namespace Testing
             textBox2.ReadOnly = true;
         }
 
-        public int total = 0;
-        public string s = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory())) + @"\Database\";
         private void Form1_Load(object sender, EventArgs e)
         {
-
-            AppLoad();
-        }
-
-        public void AppLoad()
-        {
-            string path = DateTime.Now.ToString("MM-yyyy");
-            if (File.Exists(s + path))
-            {
-                textBox2.Text = File.ReadAllText(s + path);
-            }
-            if (File.Exists(s + "total" + path))
-            {
-                textBox1.Text = File.ReadAllText(s + "total" + path);
-                textBox1.ReadOnly = true;
-            }
-            if (!string.IsNullOrEmpty(textBox2.Text))
-            {
-                string[] lines = textBox2.Text.ToString().Split('\u000A');
-                foreach (string line in lines)
-                {
-                    if (!String.IsNullOrEmpty(line))
-                    {
-                        string[] words = line.Split('*');
-                        int num = Int32.Parse(words[2].ToString());
-                        total += num;
-                    }
-                }
-            }
+            c.LoadList();
+            textBox2.Text = c.DisplayList();
+            textBox1.Text = c.LoadMax();
             label4.Text = "Total Used:";
-            label4.Text += total.ToString();
-            if (!String.IsNullOrEmpty(textBox1.Text))
+            label4.Text += c.CalTotal().ToString();
+            if (textBox1.Text != "")
             {
-                int avai = (Int32.Parse(textBox1.Text) - total);
-                if (avai >= 0)
-                {
-                    label6.Text += avai.ToString();
-                }
-                else
-                {
-                    label5.Text = "Over " + Math.Abs(avai);
-                    label6.Text = "";
-                }
+                textBox1.ReadOnly = true;
+                float avai = c.CalAva();
+                PrintStatus(avai);
             }
-
         }
-
-        private void button1_Click(object sender, EventArgs e) //input button
+        private void button1_Click(object sender, EventArgs e)
         {
             if (!String.IsNullOrEmpty(textBox1.Text)&&(textBox1.ReadOnly==false))
             {
                 textBox1.ReadOnly = true;
-                string path =s+"total" + DateTime.Now.ToString("MM-yyyy");
-                 
-                File.WriteAllText(path, textBox1.Text);
-                int avai = (Int32.Parse(textBox1.Text) - total);
-                if (avai >= 0)
-                {
-                    label6.Text += avai.ToString();
-                }
-                else
-                {
-                    label5.Text = "Over " + Math.Abs(avai);
-                    label6.Text = "";
-                }
+                c.WriteTotal(textBox1.Text);
+                float avai = c.CalAva();
+                PrintStatus(avai);
             }
         }
-
-        private void textBox1_KeyPress_1(object sender, KeyPressEventArgs e) // total amount textbox
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-                (e.KeyChar != '.'))
-            {
-                e.Handled = true;
-            }
-
-            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void textBox4_KeyPress(object sender, KeyPressEventArgs e) //cost textbox
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
-                (e.KeyChar != '.'))
-            {
-                e.Handled = true;
-            }
-
-            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void button2_Click(object sender, EventArgs e) //OK button
+        private void button2_Click(object sender, EventArgs e)
         {
             if (!String.IsNullOrEmpty(textBox3.Text) && !String.IsNullOrEmpty(textBox4.Text))
             {
-                string i = DateTime.Now.ToString("MM/dd/yyyy") + "*" + textBox3.Text + "*" + textBox4.Text + "\u000D\u000A";
-                textBox2.AppendText(i);
-                string path = DateTime.Now.ToString("MM-yyyy");
-                File.WriteAllText(s+path, "");
-                File.WriteAllText(s+path, textBox2.Text);
-                total += Int32.Parse(textBox4.Text.ToString());
+                c.add(DateTime.Now.ToString("MM/dd/yyyy"), textBox3.Text, float.Parse(textBox4.Text));
+                c.WriteList();
+                textBox2.Text = c.DisplayList();
                 label4.Text = "Total Used:";
-                label4.Text += total.ToString();
+                label4.Text += c.CalTotal().ToString();
                 if (!String.IsNullOrEmpty(textBox1.Text))
                 {
-                    int avai = (Int32.Parse(textBox1.Text) - total);
-                    if (avai >= 0)
-                    {
-                        label6.Text = "";
-                        label6.Text += avai.ToString();
-                    }
-                    else
-                    {
-                        label5.Text = "Over " + Math.Abs(avai);
-                        label6.Text = "";
-                    }
+                    float avai = c.CalAva();
+                    PrintStatus(avai);
                 }
                 textBox3.Text = "";
                 textBox4.Text = "";
+            }
+        }
+
+        private void textBox1_KeyPress_1(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
+                (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
+                (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                e.Handled = true;
+            }
+        }
+
+        
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '*')
+            {
+                e.Handled = true;
+            }
+        }
+        public void PrintStatus(float avai)
+        {
+            if (avai >= 0)
+            {
+                label6.Text = "";
+                label6.Text += avai.ToString();
+            }
+            else
+            {
+                label5.Text = "Over " + Math.Abs(avai);
+                label6.Text = "";
             }
         }
     }
