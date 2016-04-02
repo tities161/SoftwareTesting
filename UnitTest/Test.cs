@@ -32,8 +32,18 @@ namespace UnitTest
             controller.LoadList();
 
             // Assert
-            Assert.AreEqual(2,controller.Exps.Count);
+            Assert.AreEqual(2, controller.Exps.Count);
             Assert.AreEqual("banh ngot", controller.Exps.FirstOrDefault().Title);
+        }
+
+        [Test]
+        public void LoadMax_Test()
+        {
+            // Act
+            string max = controller.LoadMax();
+
+            // Assert
+            Assert.AreEqual("20000", max);
         }
 
         [Test]
@@ -43,13 +53,34 @@ namespace UnitTest
             string title = "A";
             float cost = 10000;
             string date = DateTime.Now.ToString();
-           
+
             // Act
-            controller.add(date,title,cost);
-           
+            controller.add(date, title, cost);
+
             // Assert
             Assert.AreEqual(1, controller.Exps.Count);
             Assert.AreEqual("A", controller.Exps.FirstOrDefault().Title);
+
+        }
+
+        [Test]
+        public void AddTwoItem_Test()
+        {
+            // Arrange
+            string title = "A";
+            float cost = 10000;
+            string date = DateTime.Now.ToString();
+
+            // Act
+            controller.add(date, title, cost);
+            controller.add(date, title, cost);
+            float remaining = controller.CalAva();
+
+
+            // Assert
+            Assert.AreEqual(2, controller.Exps.Count);
+            Assert.AreEqual("A", controller.Exps.FirstOrDefault().Title);
+            Assert.AreEqual(0, remaining);
 
         }
 
@@ -97,5 +128,22 @@ namespace UnitTest
             // Assert
             Assert.AreEqual(-1000, ava);
         }
+
+        [Test]
+        public void WriteTotal_Test()
+        {
+            // Arrange
+            string total = "20000";
+
+
+            // Act
+            controller.WriteTotal(total);
+            string max = controller.LoadMax();
+
+            // Assert
+            Assert.AreEqual(total, max);
+
+        }
+
     }
 }
